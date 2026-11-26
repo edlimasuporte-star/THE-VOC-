@@ -14,7 +14,6 @@ VToggle* TheVocEditor::toggle (const String& id, const String& text)
 TheVocEditor::TheVocEditor (TheVocProcessor& p) : AudioProcessorEditor (&p), proc (p)
 {
     setLookAndFeel (&lnf);
-    setSize (kW, kH);
 
     Random rng (80);
     for (int i = 0; i < 160; ++i) speckles.push_back ({ rng.nextFloat() * kW, rng.nextFloat() * kH });
@@ -77,6 +76,7 @@ TheVocEditor::TheVocEditor (TheVocProcessor& p) : AudioProcessorEditor (&p), pro
             sl->updateText();
         }
     }
+    setSize (kW, kH);
     startTimerHz (15);
     timerCallback();
 }
@@ -143,6 +143,9 @@ void TheVocEditor::paint (Graphics& g)
 
 void TheVocEditor::resized()
 {
+    if (vib[4][3] == nullptr)
+        return;
+
     // coluna direita
     const int rx = 672;
     source->setBounds (rx, 26, 288, 40);
