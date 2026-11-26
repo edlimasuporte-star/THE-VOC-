@@ -64,7 +64,7 @@ TheVocEditor::TheVocEditor (TheVocProcessor& p) : AudioProcessorEditor (&p), pro
                 auto* h = new VHSlider (proc.apvts, String (vid[k]) + s, vn[k]); owned.emplace_back (h); addAndMakeVisible (h); vib[v][k] = h;
             }
             auto* sl = &interval[v]->s;
-            sl->setTextFromValueFunction ([this] (double val)
+            sl->textFromValueFunction = [this] (double val)
             {
                 const int iv = (int) std::lround (val);
                 const bool scaleMode = ((int) proc.apvts.getRawParameterValue ("source")->load()) == 1;
@@ -72,8 +72,8 @@ TheVocEditor::TheVocEditor (TheVocProcessor& p) : AudioProcessorEditor (&p), pro
                 const int a = std::min (std::abs (iv), 14);
                 String nm = a == 0 ? "U" : a == 7 ? "8ve" : a == 14 ? "15ma" : String (a + 1) + (a == 1 ? "nd" : a == 2 ? "rd" : "th");
                 return String (iv > 0 ? "+" : iv < 0 ? "-" : "") + nm;
-            });
-            sl->setValueFromTextFunction ([] (const String& t) { return (double) t.getIntValue(); });
+            };
+            sl->valueFromTextFunction = [] (const String& t) { return (double) t.getIntValue(); };
             sl->updateText();
         }
     }
