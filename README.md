@@ -35,7 +35,9 @@ Saida: Mix, Gate, Pan, Width, Gain e limitador de seguranca para palco.
 
 ## Download
 Cada push nesta branch compila no GitHub Actions (Windows + macOS universal).
-Baixe em **Actions → Build THE VOC FX → Artifacts** ou na pagina **Releases** (tags `fx-v*`). Veja `INSTALAR.txt`.
+Baixe em **Actions → Build THE VOC FX → (ultima execucao verde) → Artifacts**. Veja `INSTALAR.txt`.
+
+Para gerar uma pagina de download permanente: **Releases → Draft a new release**, crie a tag `fx-v1.0.0` apontando para a branch `the-voc-fx` e clique **Publish** — o GitHub Actions compila e anexa os `.zip` de Windows e macOS automaticamente.
 
 ## Compilar localmente
 ```
