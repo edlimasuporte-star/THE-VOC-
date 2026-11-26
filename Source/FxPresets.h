@@ -193,8 +193,8 @@ inline void inspire (uint32_t seed, float* v, std::string& name, const float* ke
         {
             case 0: if (v[P_dsOn] > 0.5f) continue; v[P_dsOn] = 1; v[P_dsDrive] = U (10, 70); v[P_dsTone] = U (30, 90); v[P_dsType] = (float) I (0, 3); v[P_dsMix] = U (20, 70); break;
             case 1: if (v[P_rmOn] > 0.5f) continue; v[P_rmOn] = 1; v[P_rmSync] = chance (0.4f) ? 1.f : 0.f; v[P_rmFreq] = U (40, 900); v[P_rmDiv] = (float) I (2, 5); v[P_rmLfo] = U (0, 6); v[P_rmDepth] = U (0, 50); v[P_rmMix] = U (15, 50); break;
-            case 2: if (v[P_flOn] > 0.5f) continue; v[P_flOn] = 1; v[P_flType] = (float) I (0, 3); v[P_flFreq] = v[P_flType] == 1 ? U (30, 55) : U (45, 80); v[P_flRes] = U (0, 60); v[P_flMix] = v[P_flType] == 2 ? U (25, 50) : U (50, 100); break;
-            case 3: if (v[P_tfOn] > 0.5f) continue; v[P_tfOn] = 1; v[P_tfType] = (float) I (0, 7); v[P_tfWidth] = U (-30, 60); v[P_tfMix] = (v[P_tfType] == 1 || v[P_tfType] == 0) ? U (30, 60) : U (40, 100); break;
+            case 2: if (v[P_flOn] > 0.5f) continue; v[P_flOn] = 1; v[P_flType] = (float) I (0, 3); v[P_flFreq] = (int) v[P_flType] == 1 ? U (30, 55) : U (45, 80); v[P_flRes] = U (0, 60); v[P_flMix] = (int) v[P_flType] == 2 ? U (25, 50) : U (50, 100); break;
+            case 3: if (v[P_tfOn] > 0.5f) continue; v[P_tfOn] = 1; v[P_tfType] = (float) I (0, 7); v[P_tfWidth] = U (-30, 60); v[P_tfMix] = ((int) v[P_tfType] <= 1) ? U (30, 60) : U (40, 100); break;
             case 4: if (v[P_shOn] > 0.5f || ! chance (0.6f)) continue; v[P_shOn] = 1; v[P_shLength] = (float) I (1, 3); v[P_shSeq] = (float) I (1, 16); v[P_shRateA] = (float) I (0, 2); v[P_shRateB] = (float) I (1, 3); v[P_shRateC] = (float) I (2, 4); v[P_shMix] = U (40, 100); break;
             case 5: if (v[P_chOn] > 0.5f) continue; v[P_chOn] = 1; v[P_chDepth] = U (20, 90); v[P_chRate] = U (0.2f, 2.5f); v[P_chWidth] = U (40, 100); v[P_chMix] = U (15, 55); break;
             default: if (v[P_dlOn] > 0.5f) continue; v[P_dlOn] = 1; v[P_dlSync] = 1; v[P_dlDiv] = (float) I (1, 7); v[P_dlWidth] = U (20, 100); v[P_dlFeedback] = U (15, 70); v[P_dlMix] = U (10, 35); break;

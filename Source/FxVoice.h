@@ -194,7 +194,7 @@ public:
             lagSm += 0.25f * (lagT - lagSm);
             const double s = (double) nextOut - (double) lagSm;
             const int64_t limit = n - (int64_t) std::ceil (ext) - 2;
-            int64_t c;
+            int64_t c = 0;
             if (! (vo && tr.snapMark (s, limit, c))) c = std::min ((int64_t) std::llround (s), limit);
             if (gain > 0.f)
             {

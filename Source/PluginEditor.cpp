@@ -253,7 +253,7 @@ void InspirePanel::resized()
     r.removeFromBottom (12);
     const int cw = r.getWidth() / 3, ch = r.getHeight() / 2;
     for (int i = 0; i < ideaButtons.size(); ++i)
-        ideaButtons[i]->setBounds (r.getX() + (i % 3) * cw, r.getY() + (i / 3) * ch, cw, ch).reduced (6);
+        ideaButtons[i]->setBounds (Rectangle<int> (r.getX() + (i % 3) * cw, r.getY() + (i / 3) * ch, cw, ch).reduced (6));
 }
 
 // ======================================================================= EditPanel
