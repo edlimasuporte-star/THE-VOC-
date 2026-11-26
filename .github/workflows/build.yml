@@ -30,6 +30,16 @@ jobs:
       - name: Build
         run: cmake --build build --config Release --parallel
 
+      - name: Validar VST3 com pluginval (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pv.zip
+          Expand-Archive pv.zip -DestinationPath pv
+          $v = Get-ChildItem -Path build -Recurse -Directory -Filter "THE VOC FX.vst3" | Select-Object -First 1
+          .\pv\pluginval.exe --strictness-level 5 --validate-in-process --output-dir pvlog --validate "$($v.FullName)"
+          if ($LASTEXITCODE -ne 0) { Get-Content pvlog\* -ErrorAction SilentlyContinue; exit 1 }
+
       - name: Package (Windows)
         if: runner.os == 'Windows'
         shell: pwsh
@@ -41,6 +51,16 @@ jobs:
           Copy-Item $e.FullName "pkg/THE VOC FX/"
           Copy-Item INSTALAR.txt "pkg/THE VOC FX/"
           Compress-Archive -Path "pkg/THE VOC FX" -DestinationPath THE-VOC-FX-windows.zip
+
+      - name: Validar VST3 com pluginval (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          curl -sSL -o pv.zip https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_macOS.zip
+          unzip -q pv.zip -d pv
+          V="$(find build -type d -name 'THE VOC FX.vst3' | head -n 1)"
+          lipo -info "$V/Contents/MacOS/THE VOC FX"
+          plutil -p "$V/Contents/Info.plist" | head -30
+          ./pv/pluginval.app/Contents/MacOS/pluginval --strictness-level 5 --validate-in-process --validate "$V"
 
       - name: Assinar e empacotar (macOS, ad-hoc)
         if: runner.os == 'macOS'
