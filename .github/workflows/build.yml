@@ -1,0 +1,75 @@
+name: Build THE VOC FX
+
+on:
+  push:
+    branches: [ the-voc-fx ]
+    tags: [ 'fx-v*' ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest, macos-15-intel ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Teste do motor DSP (afinacao, niveis, presets, CPU)
+        if: runner.os != 'Windows'
+        run: |
+          c++ -O2 -std=c++17 -I Source -o fx_test tests/fx_test.cpp
+          ./fx_test
+
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Package (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $v = Get-ChildItem -Path build -Recurse -Directory -Filter "THE VOC FX.vst3" | Select-Object -First 1
+          $e = Get-ChildItem -Path build -Recurse -File -Filter "THE VOC FX.exe" | Select-Object -First 1
+          New-Item -ItemType Directory -Path "pkg/THE VOC FX" | Out-Null
+          Copy-Item -Recurse $v.FullName "pkg/THE VOC FX/"
+          Copy-Item $e.FullName "pkg/THE VOC FX/"
+          Copy-Item INSTALAR.txt "pkg/THE VOC FX/"
+          Compress-Archive -Path "pkg/THE VOC FX" -DestinationPath THE-VOC-FX-windows.zip
+
+      - name: Assinar e empacotar (macOS, ad-hoc)
+        if: runner.os == 'macOS'
+        run: |
+          V="$(find build -type d -name 'THE VOC FX.vst3' | head -n 1)"
+          A="$(find build -type d -name 'THE VOC FX.app' | head -n 1)"
+          codesign --force --deep -s - "$V"
+          codesign --force --deep -s - "$A"
+          codesign --verify --deep --strict --verbose=2 "$V"
+          mkdir -p "pkg/THE VOC FX"
+          cp -R "$V" "pkg/THE VOC FX/"
+          cp -R "$A" "pkg/THE VOC FX/"
+          cp INSTALAR.txt "pkg/THE VOC FX/"
+          cd pkg && ditto -c -k --keepParent "THE VOC FX" ../THE-VOC-FX-macos.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: THE-VOC-FX-${{ runner.os }}
+          path: THE-VOC-FX-*.zip
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/fx-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: THE VOC FX ${{ github.ref_name }}
+          files: '*.zip'

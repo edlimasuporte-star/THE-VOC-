@@ -1,0 +1,22 @@
+THE VOC FX - como instalar
+==========================
+
+WINDOWS
+1. Copie a pasta "THE VOC FX.vst3" para:  C:\Program Files\Common Files\VST3
+2. Abra a sua DAW e faca um novo scan de plugins.
+3. "THE VOC FX.exe" e a versao Standalone (roda sem DAW, ideal para palco).
+
+macOS
+1. Copie "THE VOC FX.vst3" para:  /Library/Audio/Plug-Ins/VST3
+2. Abra o Terminal e rode (o plugin nao tem assinatura paga da Apple):
+   xattr -cr "/Library/Audio/Plug-Ins/VST3/THE VOC FX.vst3"
+3. "THE VOC FX.app" e a versao Standalone. Se o macOS bloquear:
+   xattr -cr "/Applications/THE VOC FX.app"
+
+USO RAPIDO
+- AUTO: o synth segue a sua voz. MIDI: toque notas/acordes. SIDECHAIN: um instrumento "fala" com a sua voz.
+- Ligue os motores (TRACT, VOCODER, ROBOT, TALKBOX, HARMONY) e os efeitos pelos botoes com LED.
+- Arraste no capacete para controlar dois parametros ao vivo (escolha X e Y no topo).
+- INSPIRE gera 6 ideias criativas; clique para ouvir, SALVAR ESTE para guardar.
+- Seus presets ficam em Documentos/THE VOC FX/Presets (arquivos .vocfx, faceis de copiar e compartilhar).
+- Program Change MIDI troca de preset no palco (0 = INIT, depois os presets de fabrica em ordem, depois os seus).
