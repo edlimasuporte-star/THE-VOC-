@@ -37,8 +37,10 @@ jobs:
           Invoke-WebRequest https://github.com/Tracktion/pluginval/releases/latest/download/pluginval_Windows.zip -OutFile pv.zip
           Expand-Archive pv.zip -DestinationPath pv
           $v = Get-ChildItem -Path build -Recurse -Directory -Filter "THE VOC FX.vst3" | Select-Object -First 1
-          .\pv\pluginval.exe --strictness-level 5 --validate-in-process --output-dir pvlog --validate "$($v.FullName)"
-          if ($LASTEXITCODE -ne 0) { Get-Content pvlog\* -ErrorAction SilentlyContinue; exit 1 }
+          $out = & .\pv\pluginval.exe --strictness-level 5 --validate-in-process --validate "$($v.FullName)" 2>&1 | Out-String
+          Write-Host $out
+          if ($out -notmatch "SUCCESS") { exit 1 }
+          exit 0
 
       - name: Package (Windows)
         if: runner.os == 'Windows'
