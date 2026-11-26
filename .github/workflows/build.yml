@@ -36,6 +36,13 @@ jobs:
           $p = Get-ChildItem -Path build -Recurse -Directory -Filter "THE VOC.vst3" | Select-Object -First 1
           Compress-Archive -Path $p.FullName -DestinationPath THE-VOC-windows-vst3.zip
 
+      - name: Assinar plugin (macOS, ad-hoc)
+        if: runner.os == 'macOS'
+        run: |
+          P="$(find build -type d -name 'THE VOC.vst3' | head -n 1)"
+          codesign --force --deep -s - "$P"
+          codesign --verify --deep --strict --verbose=2 "$P"
+
       - name: Package (macOS)
         if: runner.os == 'macOS'
         run: |
